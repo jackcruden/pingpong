@@ -174,7 +174,7 @@ if ($debug) {
     <?php endfor ?>
 
     <h3>Recent</h3>
-    <?php foreach (all() as $game): ?>
+    <?php foreach (array_reverse(all()) as $game): ?>
         <div class="justify-between">
             <div>🏓 <?= $game[0] ?> v <?= $game[1] ?></div>
             <div>🏆 <?= $game[2] ?></div>
