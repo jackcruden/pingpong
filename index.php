@@ -56,12 +56,19 @@ function leaderboard(): array {
         $loser = $game[2] == $game[0] ? $game[1] : $game[0];
         $players[$loser][1]++;
     }
+    
+    // Sort by ratio
+    uasort($players, function ($a, $b) {
+        $aRatio = $a[0] / ($a[0] + $a[1]);
+        $bRatio = $b[0] / ($a[0] + $b[1]);
+        return ratio($a) > ratio($b);
+    });
 
     return $players;
 }
 
-function ratio(array $games): string {
-    return round($games[0] / array_sum($games) * 100).'%';
+function ratio(array $games) {
+    return round($games[0] / array_sum($games) * 100);
 }
 
 $debug = '';
@@ -168,7 +175,7 @@ if ($debug) {
                 <?= leaderboard()[array_keys(leaderboard())[$i]][0] ?>
                 ☠️
                 <?= leaderboard()[array_keys(leaderboard())[$i]][1] ?>
-                (<?= ratio(leaderboard()[array_keys(leaderboard())[$i]]) ?>)
+                (<?= ratio(leaderboard()[array_keys(leaderboard())[$i]]) ?>%)
             </div>
         </div>
     <?php endfor ?>
