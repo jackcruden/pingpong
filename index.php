@@ -56,12 +56,10 @@ function leaderboard(): array {
         $loser = $game[2] == $game[0] ? $game[1] : $game[0];
         $players[$loser][1]++;
     }
-    
+
     // Sort by ratio
     uasort($players, function ($a, $b) {
-        $aRatio = $a[0] / ($a[0] + $a[1]);
-        $bRatio = $b[0] / ($a[0] + $b[1]);
-        return ratio($a) > ratio($b);
+        return ratio($a) < ratio($b);
     });
 
     return $players;
