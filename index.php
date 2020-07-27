@@ -21,8 +21,8 @@ function save($player1, $player2, $winner) {
     $current .= "$player1,$player2,$winner\n";
     file_put_contents(FILENAME, $current);
 
-    setcookie('player1', clean($_POST['player1']));
-    setcookie('player2', clean($_POST['player2']));
+    setcookie('player1', clean($_POST['player1']), time()+60*60*24*30);
+    setcookie('player2', clean($_POST['player2']), time()+60*60*24*30);
 
     header('Location: /');
     exit;
