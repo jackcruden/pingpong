@@ -7,7 +7,7 @@ if (isset($_POST['add'])) {
 }
 
 function clean($input): string {
-    $input = strtolower(preg_replace("/[^A-Za-z ]/", '', $input));
+    $input = strtolower(preg_replace("/[^A-Za-z]/", '', $input));
     return ucwords($input);
 }
 
