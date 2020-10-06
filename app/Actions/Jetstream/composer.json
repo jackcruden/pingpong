@@ -1,0 +1,15 @@
+{
+  "name": "vendor_name/Jetstream",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "jack",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    
+  }
+}

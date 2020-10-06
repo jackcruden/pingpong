@@ -1,15 +1,31 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+    <div class="bg-white py-6 px-4 border-b border-gray-200">
+        <h1 class="text-4xl font-black">Welcome, {{ auth()->user()->name }}!</h1>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <x-jet-welcome />
+        <div class="mb-5">
+            <div class="flex font-bold">
+                <div class="flex-1 text-lg">Leaderboard</div>
             </div>
+
+            <ul class="flex space-x-4">
+                @foreach(auth()->user()->currentTeam->users as $user)
+                    <x-user :user="$user" />
+                @endforeach
+            </ul>
+        </div>
+
+        <div class="mb-5">
+            <div class="flex font-bold">
+                <div class="flex-1">Recently played</div>
+
+                <div>Winner</div>
+            </div>
+
+            <ul>
+                @foreach(auth()->user()->currentTeam->games()->take(5)->get() as $game)
+                    <livewire:game :game="$game" />
+                @endforeach
+            </ul>
         </div>
     </div>
 </x-app-layout>

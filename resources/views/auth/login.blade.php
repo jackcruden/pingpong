@@ -15,6 +15,12 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
+            <div class="mb-4">
+                <x-jet-nav-link href="{{ route('login.github') }}">
+                    Sign in with GitHub
+                </x-jet-nav-link>
+            </div>
+
             <div>
                 <x-jet-label value="{{ __('Email') }}" />
                 <x-jet-input class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
