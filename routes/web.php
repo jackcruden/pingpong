@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +23,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('login/github', [LoginController::class, 'redirectToProvider'])->name('login.github');
-Route::get('login/github/callback', [LoginController::class, 'handleProviderCallback']);
+Route::get('login/{provider}', [LoginController::class, 'redirectToProvider'])->name('login.social');
+Route::get('login/{provider}/callback', [LoginController::class, 'handleProviderCallback']);
 
-//
+Route::resource('games', GameController::class);

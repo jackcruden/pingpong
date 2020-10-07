@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use \Laravel\Socialite\Contracts\User as SocialiteUser;
 
 class User extends Authenticatable
 {
@@ -74,37 +77,74 @@ class User extends Authenticatable
         return self::where('email', $email)->first();
     }
 
-    /**
-     * Retrieve user by GitHub ID.
-     *
-     * @param $id
-     * @return mixed
-     */
-    public static function findByGitHubId($id)
+    public static function findOrCreateAndLoginByOauth(SocialiteUser $socialiteUser)
     {
-        return self::where('github_id', $id)->first();
+        $user = self::findByEmail($socialiteUser->getEmail());
+
+        if (! $user) {
+            $user = User::forceCreate([
+                'name' => Str::words($socialiteUser->getName(), 1, ''),
+                'email' => $socialiteUser->getEmail(),
+                'profile_photo_path' => $socialiteUser->getAvatar(),
+                'email_verified_at' => now(),
+            ]);
+
+            $team = Team::forceCreate([
+                'user_id' => $user->getKey(),
+                'name' => $user->name."'s Team",
+                'personal_team' => true,
+            ]);
+
+            $user->forceFill([
+                'current_team_id' => $team->id,
+            ]);
+        }
+
+        Auth::login($user, true);
+
+        return $user;
     }
 
     /**
      * The games this user has played.
      *
-     * @return HasMany
+     * @return BelongsToMany
      */
     public function games()
     {
         return $this->belongsToMany(Game::class);
     }
 
+    /**
+     * Games this user has won.
+     *
+     * @return BelongsToMany
+     */
     public function wins()
     {
         return $this->belongsToMany(Game::class)
             ->wherePivot('is_winner', true);
     }
 
+    /**
+     * Games this user has lost.
+     *
+     * @return BelongsToMany
+     */
     public function losses()
     {
         return $this->belongsToMany(Game::class)
             ->wherePivot('is_winner', false);
+    }
+
+    /**
+     * Win rate as a percentage.
+     *
+     * @return string
+     */
+    public function getRateAttribute()
+    {
+        return round($this->wins()->count() / $this->games()->count() * 100).'%';
     }
 
     /**
@@ -123,7 +163,13 @@ class User extends Authenticatable
             : $this->defaultProfilePhotoUrl();
     }
 
-    public function scopeOrderByRatio($query)
+    /**
+     * Order users by win rate.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOrderByRate($query)
     {
         return $query->withCount('wins')->orderByDesc('wins_count');
     }
