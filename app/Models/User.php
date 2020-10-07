@@ -95,6 +95,18 @@ class User extends Authenticatable
         return $this->belongsToMany(Game::class);
     }
 
+    public function wins()
+    {
+        return $this->belongsToMany(Game::class)
+            ->wherePivot('is_winner', true);
+    }
+
+    public function losses()
+    {
+        return $this->belongsToMany(Game::class)
+            ->wherePivot('is_winner', false);
+    }
+
     /**
      * Get the URL to the user's profile photo.
      *
@@ -113,26 +125,6 @@ class User extends Authenticatable
 
     public function scopeOrderByRatio($query)
     {
-        return $query->orderBy('pivot_is_winner');
-    }
-
-    /**
-     * Number of game wins.
-     *
-     * @return int
-     */
-    public function getWinsAttribute()
-    {
-        return $this->games()->wherePivot('is_winner', true)->count();
-    }
-
-    /**
-     * Number of game losses.
-     *
-     * @return int
-     */
-    public function getLossesAttribute()
-    {
-        return $this->games()->wherePivot('is_winner', false)->count();
+        return $query->withCount('wins')->orderByDesc('wins_count');
     }
 }

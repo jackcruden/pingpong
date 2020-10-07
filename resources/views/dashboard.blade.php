@@ -8,8 +8,8 @@
             </div>
 
             <ul class="flex space-x-4">
-                @foreach(auth()->user()->currentTeam->users as $user)
-                    <x-user :user="$user" />
+                @foreach(auth()->user()->currentTeam->users()->orderByRatio()->get() as $position => $user)
+                    <x-user :user="$user" :position="$position" />
                 @endforeach
             </ul>
         </div>

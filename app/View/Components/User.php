@@ -8,14 +8,24 @@ class User extends Component
 {
     public $user;
 
+    public $position;
+
+    protected $awards = [
+        '🥇',
+        '🥈',
+        '🥉',
+        '👤',
+    ];
+
     /**
      * Create a new component instance.
      *
      * @param $user
      */
-    public function __construct($user)
+    public function __construct($user, $position)
     {
         $this->user = $user;
+        $this->position = $this->awards[$position < 3 ? $position : 3];
     }
 
     /**
