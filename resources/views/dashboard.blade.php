@@ -4,7 +4,8 @@
             <div>
                 <h1 class="text-4xl font-black">Hi, {{ auth()->user()->name }}!</h1>
             </div>
-            <a href="#" class="block px-4 rounded-lg bg-black text-4xl font-black text-white">&plus;</a>
+
+            <a href="{{ route('games.create') }}" class="block px-4 rounded-lg bg-black text-4xl font-black text-white">&plus;</a>
         </div>
 
 
