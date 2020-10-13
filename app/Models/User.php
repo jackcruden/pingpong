@@ -77,6 +77,20 @@ class User extends Authenticatable
         return self::where('email', $email)->first();
     }
 
+    public static function findByEmailOrCreate(string $email)
+    {
+        $user = User::findByEmail($email);
+
+        if (is_null($user)) {
+            $user = User::forceCreate([
+                'name' => Str::before($email, '@'),
+                'email' => $email,
+            ]);
+        }
+
+        return $user;
+    }
+
     public static function findOrCreateAndLoginByOauth(SocialiteUser $socialiteUser)
     {
         $user = self::findByEmail($socialiteUser->getEmail());
@@ -144,7 +158,11 @@ class User extends Authenticatable
      */
     public function getRateAttribute()
     {
-        return round($this->wins()->count() / $this->games()->count() * 100).'%';
+        if (! $this->games()->count()) {
+            return '0%';
+        }
+
+        return round($this->wins()->count() / $this->games()->count() * 100) . '%';
     }
 
     /**
