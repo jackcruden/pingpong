@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\User;
 use Livewire\Component;
+use App\Models\Game;
 
 class RecordGame extends Component
 {
@@ -18,17 +19,18 @@ class RecordGame extends Component
     public $winner;
 
     protected $rules = [
-        'player1' => 'required',
-        'player2' => 'required',
-        'player1Score' => 'integer',
-        'player2Score' => 'integer',
+        'player1' => 'required|exists:users,id|different:player2',
+        'player2' => 'required|exists:users,id|different:player1',
+        'player1Score' => 'nullable|integer',
+        'player2Score' => 'nullable|integer',
+        'winner' => 'required|exists:users,id',
     ];
 
     public function mount()
     {
         $this->player1 = auth()->user()->getKey();
     }
-
+    
     public function updated()
     {
         if ($this->player1Score > $this->player2Score) {
@@ -40,10 +42,31 @@ class RecordGame extends Component
         }
     }
 
+    public function submit()
+    {
+        $this->validate($this->rules);
+
+        $game = auth()->user()->currentTeam->games()->create();
+
+        // Attach player 1
+        $game->players()->save(User::find($this->player1), [
+            'is_winner' => $this->player1 == $this->winner,
+            'score' => $this->player1Score
+        ]);
+
+        // Attach player 2
+        $game->players()->save(User::find($this->player2), [
+            'is_winner' => $this->player2 == $this->winner,
+            'score' => $this->player2Score
+        ]);
+
+        return redirect()->route('dashboard');
+    }
+
     public function render()
     {
         return view('livewire.record-game', [
-            'teammates' => auth()->user()->currentTeam->users,
+            'teammates' => auth()->user()->currentTeam->allUsers(),
         ]);
     }
 }
