@@ -15,7 +15,7 @@
             </div>
 
             <ul class="flex space-x-4">
-                @foreach(auth()->user()->currentTeam->allUsers()->sortByDesc(fn ($user) => $user->rate) as $position => $user)
+                @foreach(auth()->user()->currentTeam->allUsers()->sortByDesc(fn ($user) => $user->rate)->values() as $position => $user)
                     <x-user :user="$user" :position="$position" />
                 @endforeach
             </ul>
