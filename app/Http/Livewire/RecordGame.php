@@ -31,14 +31,17 @@ class RecordGame extends Component
         $this->player1 = auth()->user()->getKey();
     }
     
-    public function updated()
+    public function updated($name)
     {
-        if ($this->player1Score > $this->player2Score) {
-            $this->winner = $this->player1;
-        } elseif ($this->player1Score < $this->player2Score) {
-            $this->winner = $this->player2;
-        } else {
-            $this->winner = null;
+        // If score updated, set winner
+        if ($name == 'player1Score' || $name == 'player2Score') {
+            if ($this->player1Score > $this->player2Score) {
+                $this->winner = $this->player1;
+            } elseif ($this->player1Score < $this->player2Score) {
+                $this->winner = $this->player2;
+            } else {
+                $this->winner = null;
+            }
         }
     }
 
