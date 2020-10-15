@@ -7,7 +7,7 @@
 
         <div class="text-center">
             <div class="font-bold">{{ $user->name }}</div>
-            <div>{{ $user->rate }}</div>
+            <div>{{ $user->rate }}%</div>
             <div class="text-xs">🏆{{ $user->wins()->count() }} ☠️{{ $user->losses()->count() }}</div>
         </div>
     </div>

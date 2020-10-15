@@ -154,15 +154,15 @@ class User extends Authenticatable
     /**
      * Win rate as a percentage.
      *
-     * @return string
+     * @return int
      */
-    public function getRateAttribute()
+    public function getRateAttribute(): int
     {
         if (! $this->games()->count()) {
-            return '0%';
+            return 0;
         }
 
-        return round($this->wins()->count() / $this->games()->count() * 100) . '%';
+        return (int) round($this->wins()->count() / $this->games()->count() * 100);
     }
 
     /**
