@@ -22,7 +22,8 @@ class Game extends Model
         return $this->belongsToMany(User::class)
             ->withPivot('is_winner', 'score')
             ->orderByDesc('pivot_score')
-            ->orderByDesc('pivot_is_winner');
+            ->orderByDesc('pivot_is_winner')
+            ->withTimestamps();
     }
 
     public function getWinnerAttribute()

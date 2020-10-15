@@ -16,10 +16,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('login');
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    if (! auth()->user()->currentTeam->games()->count()) {
+        return redirect()->route('games.create');
+    }
+
     return view('dashboard');
 })->name('dashboard');
 
