@@ -10,6 +10,12 @@
                     </a>
                 </div>
 
+                @auth()
+                    <div class="ml-3 my-4 font-black text-2xl">
+                        {{ auth()->user()->currentTeam->name }}
+                    </div>
+                @endauth
+
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
