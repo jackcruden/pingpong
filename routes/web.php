@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,4 +31,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::get('login/{provider}', [LoginController::class, 'redirectToProvider'])->name('login.social');
 Route::get('login/{provider}/callback', [LoginController::class, 'handleProviderCallback']);
 
+Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
+
 Route::resource('games', GameController::class);
+

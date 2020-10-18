@@ -39,8 +39,8 @@
         <label class="block text-sm leading-5 font-medium text-gray-700">Winner</label>
         <select wire:model="winner" class="@error('winner') border-red-500 @enderror mt-1 form-select block w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5">
             <option value="null" selected disabled>Please select&hellip;</option>
-            @foreach(array_filter([App\Models\User::find($this->player1), App\Models\User::find($this->player2)]) as $teammate)
-                <option value="{{ $teammate->getKey() }}" @if($teammate->getKey() == $winner) selected @endif>{{ $teammate->name }}</option>
+            @foreach($this->players as $teammate)
+                <option value="{{ $teammate->getKey() }}">{{ $teammate->name }}</option>
             @endforeach
         </select>
     </div>

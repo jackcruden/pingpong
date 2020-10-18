@@ -21,14 +21,22 @@ class RecordGame extends Component
     protected $rules = [
         'player1' => 'required|exists:users,id|different:player2',
         'player2' => 'required|exists:users,id|different:player1',
-        'player1Score' => 'nullable|integer',
-        'player2Score' => 'nullable|integer',
+        'player1Score' => 'nullable|integer|different:player2Score',
+        'player2Score' => 'nullable|integer|different:player1Score',
         'winner' => 'required|exists:users,id',
     ];
 
     public function mount()
     {
         $this->player1 = auth()->user()->getKey();
+    }
+
+    public function getPlayersProperty()
+    {
+        return array_filter([
+            User::find($this->player1),
+            User::find($this->player2),
+        ]);
     }
     
     public function updated($name)
@@ -41,6 +49,10 @@ class RecordGame extends Component
                 $this->winner = $this->player2;
             } else {
                 $this->winner = null;
+            }
+        } elseif ($name == 'winner') {
+            if ($this->player1Score) {
+
             }
         }
     }
