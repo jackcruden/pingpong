@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::get('login/{provider}', [LoginController::class, 'redirectToProvider'])->name('login.social');
 Route::get('login/{provider}/callback', [LoginController::class, 'handleProviderCallback']);
 
-Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
+Route::middleware('auth')->get('users/{user}', [UserController::class, 'show'])->name('users.show');
 
-Route::resource('games', GameController::class);
+Route::middleware('auth')->resource('games', GameController::class);
 
