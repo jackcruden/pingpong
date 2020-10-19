@@ -7,9 +7,9 @@
                 <div class="text-3xl">{{ $user->name }}</div>
 
                 <div class="flex space-x-2">
-                    <div>🏆 {{ $user->games()->count() }} {{ \Illuminate\Support\Str::plural('game', $user->games()->count()) }} won</div>
+                    <div>🏆 {{ $user->wins()->count() }} {{ \Illuminate\Support\Str::plural('game', $user->wins()->count()) }} won</div>
 
-                    <div>☠️ {{ $user->games()->count() }} {{ \Illuminate\Support\Str::plural('game', $user->games()->count()) }} lost</div>
+                    <div>☠️ {{ $user->losses()->count() }} {{ \Illuminate\Support\Str::plural('game', $user->losses()->count()) }} lost</div>
                 </div>
             </duv>
         </div>
